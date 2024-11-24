@@ -1,6 +1,62 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<h2>Detection Result</h2>
-<p>{{ result }}</p>
-<a href="{% url 'upload_image' %}">Try another image</a>
+<style>
+    /* Gradient background for the whole page */
+    body {
+        background-image: url("{% static '/images/line-particles.jpg' %}");
+        font-family: Arial, sans-serif;
+        
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    /* Centering the result container */
+    .result-container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 1.5rem;
+    }
+
+    p {
+        font-size: 1.2rem;
+        color: #555;
+        margin-bottom: 1.5rem;
+    }
+
+    /* a {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+    }
+
+    a:hover {
+        background: linear-gradient(135deg, #2575fc, #6a11cb);
+    } */
+</style>
+<center>
+<div class="result-container">
+    <h2>Detection Result</h2>
+    <p>{{ result }}</p>
+    <a href="{% url 'upload_image' %}">Try another image</a>
+</div>
+</center>
 {% endblock %}

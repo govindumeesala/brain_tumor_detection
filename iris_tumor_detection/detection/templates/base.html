@@ -4,40 +4,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Brain tumor detector{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'detection/css/styles.css' %}">
-</head>
-<body>
-    <header>
-        <h1>Brain Tumor Detector</h1>
-        <nav>
-            {% if user.is_authenticated %}
-                <a href="{% url 'upload_image' %}">Upload Image</a> |
-                <a href="{% url 'logout' %}">Logout</a>
-            {% else %}
-                <a href="{% url 'register' %}">Register</a> |
-                <a href="{% url 'login' %}">Login</a>
-            {% endif %}
-        </nav>
-    </header>
+    <title>{% block title %}Iris Tumor Detector{% endblock %}</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Internal CSS for custom styling */
+        nav{
+            background-color: rgb(165, 174, 255);
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #ffffff !important;
+        }
+        .landing-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 0;
+            
+            background-size: cover;
+            color: white;
+            text-align: center;
+        }
+        .landing-section h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        .landing-section p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .cta-button {
+            font-size: 1.2em;
+            color: white;
+            background-color: #007bff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .cta-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .options {
+            color: white !important;
+        }
 
-    <!-- Messages Section -->
-    {% if messages %}
-        <div class="messages">
-            <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
+        .messages {
+            margin-top: 20px;
+        }
+        
+    </style>
+</head>
+<body class="bg-img">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="{% url 'home' %}">Iris Tumor Detector</a>
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link options" href="{% url 'upload_image' %}">Upload Image</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link options" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link options" href="{% url 'register' %}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link options" href="{% url 'login' %}">Login</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
-    {% endif %}
+    </nav>
 
-    <main class="main-content">
+    <!-- Messages Block -->
+    <div class="container messages">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="container my-5">
         {% block content %}{% endblock %}
     </main>
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+          <p class="col-md-4 mb-0 text-white">© 2024 Company, Inc</p>
+          <ul class="nav col-md-4 justify-content-end">
+            <li class="nav-item"><a href="http://127.0.0.1:8000/" class="nav-link px-2 text-white">Home</a></li>
+            <li class="nav-item"><a href="{% url 'register' %}" class="nav-link px-2 text-white">Register</a></li>
+            <li class="nav-item"><a href="{% url 'login' %}" class="nav-link px-2 text-white">Login</a></li>
 
-    <footer>
-        &copy; 2023 My Django Project. All rights reserved.
-    </footer>
+            
+          </ul>
+        </footer>
+      </div>
+    
+    <style>
+        .options{
+            color: #007bff !important;
+        }
+    </style>
+    <!-- Bootstrap JS, jQuery, and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

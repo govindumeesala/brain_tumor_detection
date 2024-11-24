@@ -14,13 +14,13 @@ def preprocess_image(image: InMemoryUploadedFile):
     
     # Check if the image is valid
     if img is None:
-        raise ValueError("Invalid image provided")
+        raise ValueError("Invalid image provided or not an image.")
     
     # Resize to match the original model input
     img_resized = cv2.resize(img, (64, 64))
     
     # Flatten the array to match the input shape expected by the SVM model
-    img_flattened = img_resized.flatten().reshape(1, -1)  # Should be (1, 12288)
+    img_flattened = img_resized.flatten().reshape(1, -1)  
     
     return img_flattened
 
@@ -32,7 +32,6 @@ def detect_tumor(image: InMemoryUploadedFile):
     
     return prediction[0]  # Return the prediction (0 or 1)
 
-# Example usage in Django view
 def handle_uploaded_image(image: InMemoryUploadedFile):
     result = detect_tumor(image)
     if result == 1:

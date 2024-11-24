@@ -1,9 +1,79 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<h2>Upload Image for Tumor Detection</h2>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Detect Tumor</button>
-</form>
+<style>
+    /* Gradient background for the whole page */
+    body {
+        background-image: url("{% static '/images/line-particles.jpg' %}");
+        font-family: Arial, sans-serif;
+        
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    /* Centering the form container */
+    .upload-container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Form element styling */
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    form input[type="file"] {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+        cursor: pointer;
+        color: #333;
+    }
+
+    form input[type="file"]:focus {
+        border-color: #6a11cb;
+        outline: none;
+    }
+
+    button[type="submit"] {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 0.75rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button[type="submit"]:hover {
+        background: linear-gradient(135deg, #2575fc, #6a11cb);
+    }
+</style>
+<center><div class="upload-container">
+    <h2>Upload Image for Tumor Detection</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Detect Tumor</button>
+    </form>
+</div>
+</center>
 {% endblock %}

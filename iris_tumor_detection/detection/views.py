@@ -3,13 +3,11 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from .forms import ImageUploadForm
-from .utils import handle_uploaded_image  # Ensure this function is correctly defined for tumor detection
+from .utils import handle_uploaded_image 
 
-#home view
 def home_view(request):
-    return render(request, 'base.html')
+    return render(request, 'detection/home.html')
 
-# Register view
 def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -18,12 +16,11 @@ def register_view(request):
             login(request, user)
             messages.success(request, "Registration successful.")
             return redirect('upload_image')
-        messages.error(request, "Unsuccessful registration. Invalid information.")
+        messages.error(request, "Give correct credentials.")
     else:
         form = UserCreationForm()
     return render(request, 'detection/register.html', {'form': form})
 
-# Login view
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -41,10 +38,9 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'detection/login.html', {'form': form})
 
-# Logout view
 def logout_view(request):
     logout(request)
-    messages.info(request, "You have been logged out.")  # Optional message
+    messages.info(request, "You have been logged out.")  
     return redirect('login')
 
 # Upload Image view for tumor detection
