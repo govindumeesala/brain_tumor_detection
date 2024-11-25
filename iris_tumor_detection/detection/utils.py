@@ -1,40 +1,38 @@
-import cv2
+import os
 import numpy as np
-import joblib
-from django.core.files.uploadedfile import InMemoryUploadedFile
+from PIL import Image
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input, Flatten, Dense, Dropout
+from tensorflow.keras.applications.vgg19 import VGG19
 
-# Load the trained model
-model_path = 'detection/svm_model.pkl'  # Update this path as necessary
-svm_model = joblib.load(model_path)
+# Load the pre-trained VGG19 model
+base_model = VGG19(include_top=False, input_shape=(240, 240, 3))
+x = base_model.output
+flat = Flatten()(x)
+class_1 = Dense(4608, activation='relu')(flat)
+drop_out = Dropout(0.2)(class_1)
+class_2 = Dense(1152, activation='relu')(drop_out)
+output = Dense(2, activation='softmax')(class_2)
+model = Model(inputs=base_model.inputs, outputs=output)
 
-def preprocess_image(image: InMemoryUploadedFile):
-    # Convert to OpenCV format
-    file_bytes = np.frombuffer(image.read(), np.uint8)
-    img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
-    
-    # Check if the image is valid
-    if img is None:
-        raise ValueError("Invalid image provided or not an image.")
-    
-    # Resize to match the original model input
-    img_resized = cv2.resize(img, (64, 64))
-    
-    # Flatten the array to match the input shape expected by the SVM model
-    img_flattened = img_resized.flatten().reshape(1, -1)  
-    
-    return img_flattened
+# Load the model weights
+model.load_weights('detection/vgg_unfrozen.h5')
 
-def detect_tumor(image: InMemoryUploadedFile):
-    features = preprocess_image(image)
-    
-    # Predict using the SVM model
-    prediction = svm_model.predict(features)
-    
-    return prediction[0]  # Return the prediction (0 or 1)
+def get_class_name(class_no):
+    """Map the class index to the corresponding tumor status."""
+    return "No Tumor detected" if class_no == 0 else "Tumor detected"
 
-def handle_uploaded_image(image: InMemoryUploadedFile):
-    result = detect_tumor(image)
-    if result == 1:
-        return "Tumor detected"
-    else:
-        return "No tumor detected"
+def preprocess_image(image):
+    """Process the uploaded image for prediction."""
+    img = Image.open(image)
+    img = img.resize((240, 240))
+    img_array = np.array(img)
+    input_img = np.expand_dims(img_array, axis=0)
+    return input_img
+
+def detect_tumor(image):
+    """Predict the tumor status using the model."""
+    preprocessed_img = preprocess_image(image)
+    prediction = model.predict(preprocessed_img)
+    class_idx = np.argmax(prediction, axis=1)[0]
+    return get_class_name(class_idx)

@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from .forms import ImageUploadForm
-from .utils import handle_uploaded_image 
+from .utils import detect_tumor 
 
 def home_view(request):
     return render(request, 'detection/home.html')
@@ -51,8 +51,8 @@ def upload_image_view(request):
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             image = form.cleaned_data['image']
-            result = handle_uploaded_image(image)  # Calls tumor detection logic
-            return render(request, 'detection/result.html', {'result': result}) 
+            result = detect_tumor(image)  # Updated to use the new VGG19-based logic
+            return render(request, 'detection/result.html', {'result': result})
     else:
         form = ImageUploadForm()
     return render(request, 'detection/upload_image.html', {'form': form})
